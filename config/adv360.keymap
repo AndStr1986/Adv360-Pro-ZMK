@@ -9,7 +9,14 @@
     behaviors {
         #include "macros.dtsi"
       #include "version.dtsi"
-
+        hm_del_symbol: hm_del_symbol {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HM_DEL_SYMBOL";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp DEL &mo SYMBOL>;
+        };
         hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
             label = "HOMEROW_MODS";
@@ -99,10 +106,10 @@
             >;
         };
 
-symbol_layer {
-    display-name = "Cyan";
+      symbol_layer {
+        display-name = "Cyan";
 
-    bindings = <
+        bindings = <
         // Top row
         &kp 1 &kp 2 &kp 3 &kp 4 &kp 5 &kp 6 &kp 7 &kp 8 &kp 9 &kp 0 &kp MINUS &kp EQUAL
         // Home row
@@ -111,8 +118,8 @@ symbol_layer {
         &kp A &kp S &kp D &kp F &kp G &kp H &kp J &kp K &kp L &kp SEMI &kp QUOTE &kp FSLH
         // Thumb cluster
         &kp COMMA &kp DOT &kp US_LT &kp US_GT &kp US_BSLASH &kp US_PIPE
-    >;
-};
+       >;
+      }
 
         extra2 {
             display-name = "test";
