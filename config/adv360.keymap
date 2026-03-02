@@ -114,11 +114,11 @@
         symbol {
             display-name = "Sym";
             bindings = <
-&kp EXCL   &kp AT    &kp HASH  &kp DLLR  &kp PERCENT  &kp CARET  &trans                                         &trans  &kp AMPERSAND  &kp ASTERISK  &kp PLUS  &kp MINUS  &kp EQUAL  &kp PIPE
-&kp GRAVE  &kp N1    &kp N2    &kp N3    &kp N4       &kp N5     &none                                          &none   &kp N6         &kp N7        &kp N8    &kp N9     &kp N0     &kp TILDE
-&trans     &kp LBKT  &kp RBKT  &kp BSLH  &kp FSLH     &kp SEMI   &none     &trans   &trans      &trans  &trans  &none   &kp SQT        &kp COMMA     &kp DOT   &kp BSLH   &kp FSLH   &trans
-&trans     &trans    &trans    &trans    &trans       &trans                        &trans      &trans                  &trans         &trans        &trans    &trans     &trans     &trans
-&trans     &trans    &trans    &trans    &trans                  &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans                 &trans        &trans    &kp LBKT   &kp RBKT   &trans
+&kp EXCL   &kp AT    &kp HASH  &kp DLLR  &kp PERCENT  &kp CARET  &trans                                         &trans  &kp AMPERSAND   &kp ASTERISK     &kp PLUS          &kp MINUS          &kp EQUAL  &kp PIPE
+&kp GRAVE  &kp N1    &kp N2    &kp N3    &kp N4       &kp N5     &none                                          &none   &kp LEFT_BRACE  &kp RIGHT_BRACE  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp AT     &kp TILDE
+&trans     &kp LBKT  &kp RBKT  &kp BSLH  &kp FSLH     &kp SEMI   &none     &trans   &trans      &trans  &trans  &none   &kp SQT         &kp COMMA        &kp DOT           &kp BSLH           &kp FSLH   &trans
+&trans     &trans    &trans    &trans    &trans       &trans                        &trans      &trans                  &trans          &trans           &trans            &trans             &trans     &trans
+&trans     &trans    &trans    &trans    &trans                  &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans                  &trans           &trans            &kp LBKT           &kp RBKT   &trans
             >;
         };
 
