@@ -94,6 +94,33 @@
                 &none &none &none &none &none &none &none &none &none &bl BL_TOG &rgb_ug RGB_TOG &bl BL_INC &bl BL_DEC &none &none &none
             >;
         };
+        /* =========================
+           LAYER 5 — SYMBOL (dev optimized)
+           ========================= */
+        symbol {
+            display-name = "Sym";
+            bindings = <
+                /* Row 1: common operators + braces/parens */
+                &kp EXCL  &kp AT    &kp HASH  &kp DLR   &kp PERC  &kp CIRC  &trans                                         &trans
+                &kp AMPR  &kp PIPE  &kp BSLH  &kp TILD  &kp PLUS  &kp EQUAL
+
+                /* Row 2: quotes, underscores, minus, and angle brackets */
+                &kp GRAVE &kp SQT   &kp DQT   &kp UNDERSCORE &kp MINUS &kp STAR &none                                       &none
+                &kp LT    &kp GT    &kp COMMA &kp DOT       &kp QMARK &kp SLASH
+
+                /* Row 3: brackets + parentheses + semicolon/colon */
+                &trans    &kp LBKT  &kp RBKT  &kp LPAR      &kp RPAR  &kp COLON &none     &trans   &trans      &trans  &trans  &none
+                &kp LBRACE &kp RBRACE &kp SEMI &kp SQT      &kp DQT   &kp BSLH  &kp PIPE  &trans
+
+                /* Row 4: keep mostly transparent (or use for macros later) */
+                &trans    &trans    &trans    &trans        &trans    &trans                       &trans      &trans
+                &trans    &trans    &trans    &trans        &trans    &trans
+
+                /* Row 5: keep editing keys + quick access to [] {} */
+                &trans    &trans    &trans    &trans   &trans              &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans
+                &trans     &trans   &kp LBKT  &kp RBKT  &kp LBRACE  &kp RBRACE
+            >;
+        };
 
         extra1 { display-name = "Red"; status = "reserved"; };
         extra2 { display-name = "Purple"; status = "reserved"; };
