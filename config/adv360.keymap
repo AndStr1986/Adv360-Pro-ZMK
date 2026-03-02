@@ -95,30 +95,18 @@
             >;
         };
         /* =========================
-           LAYER 5 — SYMBOL (dev optimized)
+           LAYER 5 — SYMBOL (safe + dev focused)
+           Uses only common ZMK keycodes known to exist.
+           Curly braces, quotes, colon, question, angle brackets are reached via Shift on base keys.
            ========================= */
         symbol {
             display-name = "Sym";
             bindings = <
-                /* Row 1: common operators + braces/parens */
-                &kp EXCL  &kp AT    &kp HASH  &kp DLR   &kp PERC  &kp CIRC  &trans                                         &trans
-                &kp AMPR  &kp PIPE  &kp BSLH  &kp TILD  &kp PLUS  &kp EQUAL
-
-                /* Row 2: quotes, underscores, minus, and angle brackets */
-                &kp GRAVE &kp SQT   &kp DQT   &kp UNDERSCORE &kp MINUS &kp STAR &none                                       &none
-                &kp LT    &kp GT    &kp COMMA &kp DOT       &kp QMARK &kp SLASH
-
-                /* Row 3: brackets + parentheses + semicolon/colon */
-                &trans    &kp LBKT  &kp RBKT  &kp LPAR      &kp RPAR  &kp COLON &none     &trans   &trans      &trans  &trans  &none
-                &kp LBRACE &kp RBRACE &kp SEMI &kp SQT      &kp DQT   &kp BSLH  &kp PIPE  &trans
-
-                /* Row 4: keep mostly transparent (or use for macros later) */
-                &trans    &trans    &trans    &trans        &trans    &trans                       &trans      &trans
-                &trans    &trans    &trans    &trans        &trans    &trans
-
-                /* Row 5: keep editing keys + quick access to [] {} */
-                &trans    &trans    &trans    &trans   &trans              &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans
-                &trans     &trans   &kp LBKT  &kp RBKT  &kp LBRACE  &kp RBRACE
+                &kp EXCL   &kp AT     &kp HASH   &kp DLR    &kp PERC   &kp CIRC   &trans                                         &trans  &kp AMPR   &kp ASTER  &kp LPAREN &kp RPAREN &kp UNDERSCORE &kp PLUS
+                &kp GRAVE  &kp N1     &kp N2     &kp N3     &kp N4     &kp N5     &none                                          &none   &kp N6     &kp N7     &kp N8     &kp N9     &kp N0        &kp PIPE
+                &trans     &kp LBKT   &kp RBKT   &kp MINUS  &kp EQUAL  &kp BSLH   &none     &trans   &trans      &trans  &trans  &none   &kp COMMA  &kp DOT   &kp FSLH  &kp SEMI  &kp SQT   &kp TILD
+                &trans     &trans     &trans     &trans     &trans     &trans                       &trans      &trans                  &trans   &trans    &trans    &trans    &trans     &trans
+                &trans     &trans     &trans     &trans     &trans               &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans            &trans   &trans    &kp LBKT  &kp RBKT  &trans
             >;
         };
 
