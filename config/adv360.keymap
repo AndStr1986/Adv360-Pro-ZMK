@@ -100,33 +100,27 @@
         };
 
         /* =========================
-           LAYER 5 — SYMBOL (Nordic, home-row heavy, light top-row)
-           - Top row uses only 2–4 (left) and 7–9 (right)
-           - Most symbols live on rows 2–4
-           - Uses LS() and RA() so you get actual symbols on Nordic layouts
+           LAYER 5 — SYMBOL (home-row heavy, light top-row)
+           Uses base keys only (build-safe on your repo).
+           Use Shift / AltGr for the symbol your OS layout provides.
            ========================= */
         symbol {
             display-name = "Sym";
             bindings = <
-                /* Row 1 (very light use) */
-                &trans      &kp LS(N2)  &kp LS(N3)  &kp LS(N4)  &trans      &trans      &trans                                         &trans
-                &trans      &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &trans      &trans
+                /* Row 1 — LIGHT (only 2–4 left, 7–9 right; rest trans) */
+                &trans     &kp N2     &kp N3     &kp N4     &trans     &trans     &trans                                         &trans  &kp N7     &kp N8     &kp N9     &trans     &trans     &trans
 
-                /* Row 2 (core dev symbols near top/home) */
-                &kp RA(N2)  &kp RA(N7)  &kp RA(N8)  &kp RA(N9)  &kp RA(N0)  &kp RA(BSLH) &none                                         &none
-                &kp BSLH    &kp PIPE    &kp FSLH    &kp LS(FSLH) &kp SEMI    &kp LS(SEMI)
+                /* Row 2 — CORE brackets/operators near fingers */
+                &kp GRAVE  &kp LBKT   &kp RBKT   &kp BSLH   &kp FSLH   &kp SEMI   &none                                          &none   &kp COMMA  &kp DOT    &kp SQT    &kp MINUS  &kp EQUAL  &kp BSLH
 
-                /* Row 3 (home row: brackets/parens/ops clustered) */
-                &trans      &kp LS(N8)  &kp LS(N9)  &kp RA(N8)  &kp RA(N9)  &kp MINUS   &none     &trans   &trans      &trans  &trans  &none
-                &kp EQUAL   &kp LS(EQUAL) &kp LS(MINUS) &kp SQT &kp LS(SQT) &kp COMMA   &kp DOT   &trans
+                /* Row 3 — MOST USED dev cluster (home row area) */
+                &trans     &kp N8     &kp N9     &kp LBKT   &kp RBKT   &kp MINUS  &none     &trans   &trans      &trans  &trans  &none   &kp COMMA  &kp DOT    &kp FSLH   &kp SEMI   &kp EQUAL  &trans
 
-                /* Row 4 (ZXCV row: angle brackets + extra ops) */
-                &trans      &kp LS(COMMA) &kp LS(DOT)  &kp COMMA &kp DOT    &kp ASTER                     &trans      &trans
-                &kp PLUS    &kp AMPR     &kp HASH     &kp AT    &kp DLR     &kp PERC
+                /* Row 4 — HEAVIER (more symbols here) */
+                &trans     &kp N7     &kp N0     &kp BSLH   &kp FSLH   &kp SQT                        &trans      &trans                  &kp COMMA &kp DOT    &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT
 
-                /* Row 5 (thumb/edit row kept sane) */
-                &trans      &trans      &trans      &trans      &trans               &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans
-                &trans      &trans      &trans      &trans      &trans      &trans
+                /* Row 5 — keep editing keys */
+                &trans     &trans     &trans     &trans     &trans               &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans            &trans    &trans    &kp LBKT   &kp RBKT   &trans
             >;
         };
 
