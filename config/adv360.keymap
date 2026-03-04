@@ -100,27 +100,30 @@
         };
 
         /* =========================
-           LAYER 5 — SYMBOL (home-row heavy, light top-row)
-           Uses base keys only (build-safe on your repo).
-           Use Shift / AltGr for the symbol your OS layout provides.
+           LAYER 5 — SYMBOL (macOS Nordic based on your measured outputs)
+           Uses ZMK modifier wrappers: LS() = Shift, LA() = Left Alt (Option)
            ========================= */
         symbol {
             display-name = "Sym";
             bindings = <
-                /* Row 1 — LIGHT (only 2–4 left, 7–9 right; rest trans) */
-                &trans     &kp N2     &kp N3     &kp N4     &trans     &trans     &trans                                         &trans  &kp N7     &kp N8     &kp N9     &trans     &trans     &trans
+                /* Row 1 (light) */
+                &kp LS(N1) &kp LS(N2) &kp LS(N3) &kp LS(N4) &kp LS(N5) &kp LS(N6) &trans                                         &trans  &kp LS(N7) &kp LS(N8) &kp LS(N9) &kp LS(N0) &kp LA(N7)      &kp LA(LS(N7))
+                /*            !          "          #          $          %          &                         /          (          )          =         |             \ */
 
-                /* Row 2 — CORE brackets/operators near fingers */
-                &kp GRAVE  &kp LBKT   &kp RBKT   &kp BSLH   &kp FSLH   &kp SEMI   &none                                          &none   &kp COMMA  &kp DOT    &kp SQT    &kp MINUS  &kp EQUAL  &kp BSLH
+                /* Row 2 (core brackets/ops close to fingers) */
+                &kp GRAVE  &kp LA(N8)  &kp LA(N9)  &kp LA(LS(N8)) &kp LA(LS(N9)) &kp LA(N7) &none                                         &none   &kp LS(RBKT) &kp LA(RBKT) &kp COMMA &kp DOT   &kp LA(M) &kp LA(N)
+                /*            <          [           ]           {             }            |                      ^           ~            ,        .       ’        ‘ */
 
-                /* Row 3 — MOST USED dev cluster (home row area) */
-                &trans     &kp N8     &kp N9     &kp LBKT   &kp RBKT   &kp MINUS  &none     &trans   &trans      &trans  &trans  &none   &kp COMMA  &kp DOT    &kp FSLH   &kp SEMI   &kp EQUAL  &trans
+                /* Row 3 (home cluster: () [] {} and common punctuation) */
+                &trans     &kp LS(N8)  &kp LS(N9)  &kp LA(N8)     &kp LA(N9)     &kp LA(LS(N8)) &none     &trans   &trans      &trans  &trans  &none   &kp LA(LS(N9)) &kp LS(COMMA) &kp LS(DOT) &kp FSLH &kp LS(FSLH) &trans
+                /*             (          )          [             ]              {              }               ;            :          -        _ */
 
-                /* Row 4 — HEAVIER (more symbols here) */
-                &trans     &kp N7     &kp N0     &kp BSLH   &kp FSLH   &kp SQT                        &trans      &trans                  &kp COMMA &kp DOT    &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT
+                /* Row 4 (your preferred bottom swap: = + - on left, , . ? on right) */
+                &trans     &kp LS(N0)  &kp MINUS   &kp FSLH  &kp LS(FSLH) &kp LS(COMMA)                    &trans      &trans                  &kp COMMA &kp DOT &kp LS(MINUS) &kp LA(N7) &kp LA(LS(N7)) &kp LA(N8)
+                /*             =         +          -       _          ;                       ,       .        ?           |            \           [ */
 
-                /* Row 5 — keep editing keys */
-                &trans     &trans     &trans     &trans     &trans               &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans            &trans    &trans    &kp LBKT   &kp RBKT   &trans
+                /* Row 5 (edit row) */
+                &trans     &trans     &trans     &trans     &trans               &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans            &trans    &trans    &trans    &trans    &trans
             >;
         };
 
