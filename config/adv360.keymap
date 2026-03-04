@@ -100,25 +100,27 @@
         };
 
         /* =========================
-           LAYER 5 — SYMBOL (maximum compatibility)
-           Notes:
-           - No UNDERSCORE / UNDER (varies by fork)
-           - No LPAREN/RPAREN/LPAR/RPAR (varies by fork)
-           - Use [ ] plus your normal Shift (homerow shift) to get { }
-           - Use ; plus Shift to get :
-           - Use ' plus Shift to get "
-           - Use / plus Shift to get ?
-           - Use , . plus Shift to get < >
+           LAYER 5 — SYMBOL (dev optimized)
+           Uses base keys only so builds won't fail.
+           Use Shift / AltGr for the symbol your OS layout provides.
            ========================= */
-
         symbol {
             display-name = "Sym";
             bindings = <
-&kp EXCL   &kp AT    &kp HASH  &kp DLLR  &kp PERCENT  &kp CARET  &trans                                         &trans  &kp AMPERSAND  &kp ASTERISK         &kp PLUS              &kp MINUS              &kp EQUAL  &kp PIPE
-&kp GRAVE  &kp N1    &kp N2    &kp N3    &kp N4       &kp N5     &none                                          &none   &kp RA(N7)     &kp RA(RIGHT_BRACE)  &kp RA(LEFT_BRACKET)  &kp RA(RIGHT_BRACKET)  &kp AT     &kp TILDE
-&trans     &kp LBKT  &kp RBKT  &kp BSLH  &kp FSLH     &kp SEMI   &none     &trans   &trans      &trans  &trans  &none   &kp LS(SQT)    &kp LS(COMMA)        &kp DOT               &kp BSLH               &kp FSLH   &trans
-&trans     &trans    &trans    &trans    &trans       &trans                        &trans      &trans                  &trans         &trans               &trans                &trans                 &trans     &trans
-&trans     &trans    &trans    &trans    &trans                  &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans                 &trans               &trans                &kp LBKT               &kp RBKT   &trans
+                /* Row 1 — rare symbols */
+                &kp N1     &kp N2     &kp N3     &kp N4     &kp N5     &kp N6     &trans                                         &trans  &kp N7     &kp N8     &kp N9     &kp N0     &kp MINUS  &kp EQUAL
+
+                /* Row 2 — brackets + operators */
+                &kp GRAVE  &kp LBKT   &kp RBKT   &kp BSLH   &kp FSLH   &kp SEMI   &none                                          &none   &kp COMMA  &kp DOT    &kp MINUS  &kp EQUAL  &kp SQT    &kp BSLH
+
+                /* Row 3 — most-used dev cluster */
+                &trans     &kp N8     &kp N9     &kp N7     &kp N0     &kp LBKT   &none     &trans   &trans      &trans  &trans  &none   &kp RBKT   &kp COMMA  &kp DOT    &kp FSLH   &kp SEMI   &trans
+
+                /* Row 4 — mostly transparent */
+                &trans     &trans     &trans     &trans     &trans     &trans                       &trans      &trans                  &trans    &trans    &trans     &trans     &trans     &trans
+
+                /* Row 5 — keep editing keys */
+                &trans     &trans     &trans     &trans     &trans               &kp BSPC  &kp DEL  &trans      &trans  &trans  &trans            &trans    &trans    &kp LBKT   &kp RBKT   &trans
             >;
         };
 
