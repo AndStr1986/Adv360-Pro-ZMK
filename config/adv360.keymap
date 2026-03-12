@@ -8,16 +8,27 @@
  * ║  Layer map:                                                                  ║
  * ║    0  Mac      — Base layer, macOS homerow mods (GUI/Alt/Ctrl/Shift)        ║
  * ║    1  Win      — Base layer, Windows homerow mods (Ctrl/Alt/Ctrl/Shift)     ║
- * ║    2  Media    — Media transport, volume, brightness, app launchers          ║
- * ║    3  Fn       — F1–F12 function keys                                        ║
- * ║    4  Mod      — Bluetooth, RGB, backlight, firmware controls                ║
- * ║    5  Sym      — Symbols optimised for macOS Norwegian + ANSI hardware      ║
- * ║    6  extra1   — Reserved (Red)                                              ║
- * ║    7  extra2   — Reserved (Purple)                                           ║
- * ║    8  extra3   — Reserved (Cyan)                                             ║
+ * ║    2  Media    — Transport, volume, brightness, app launchers               ║
+ * ║    3  Fn       — F1–F12 function keys                                       ║
+ * ║    4  Mod      — Bluetooth, RGB, backlight, firmware                        ║
+ * ║    5  Sym      — Symbols (optimised for macOS Norwegian + ANSI hardware)    ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
- * ── macOS Norwegian key reference (US ANSI hardware → OS Norwegian output) ────
+ * ── Physical key grid positions (76 total per layer) ───────────────────────────
+ *
+ *  Row 1  [ 1– 7]  [ 8–14]   =  1  2  3  4  5  [iL]   [iR]  6  7  8  9  0  -
+ *  Row 2  [15–21]  [22–28]   Tab Q  W  E  R  T  [iL]   [iR]  Y  U  I  O  P  \
+ *  Row 3  [29–46]  (includes 4 thumb keys at positions 36–39)
+ *                            Esc A  S  D  F  G  [iL] TL TR TR TR [iR]  H  J  K  L  ;  '
+ *  Row 4  [47–60]  (2 inner keys at positions 53–54)
+ *                            LS  Z  X  C  V  B      [Ho][Pu]      N  M  ,  .  /  RS
+ *  Row 5  [61–76]  (6 thumb keys at positions 66–71)
+ *                            m2  §  Ca ←  →    [T1][T2][T3] [T4][T5][T6]   ↑  ↓  å  ¨  m2
+ *
+ *  Thumb cluster (positions 66–71):
+ *    T1=BSPC  T2=mo5(Sym)  T3=END  │  T4=PgDn  T5=ENTER  T6=SPACE
+ *
+ * ── macOS Norwegian verified keycode → output reference ────────────────────────
  *
  *   ZMK keycode       Output    ZMK keycode          Output
  *   ──────────────────────────  ──────────────────────────────
@@ -32,24 +43,20 @@
  *   SQT               æ         LS(SQT)              Æ
  *   LS(COMMA)         ;         LS(DOT)              :
  *   LS(N1)            !         LS(N2)               "
- *   LS(N3)            #         LS(N4)               ¤  (currency, NOT $)
+ *   LS(N3)            #         LS(N4)               ¤ (NOT $)
  *   LS(N5)            %         LS(N6)               &
  *   LS(N7)            /         LS(N8)               (
  *   LS(N9)            )         LS(N0)               =
  *   LA(N2)            @         LA(N4)               $
  *   LA(N6)            |         LA(N8)               [
- *   LA(N9)            ]         LA(BSLH)             @  (alt location)
+ *   LA(N9)            ]         LA(BSLH)             @  (alt)
  *   LA(RBKT)          ~ ⚠       LA(LS(N2))           €
  *   LA(LS(N7))        \         LA(LS(N8))           {
  *   LA(LS(N9))        }         EQUAL                \
  *
- *   ⚠  LA(RBKT) → ~ is a dead key on Norwegian. It outputs ~ correctly
- *      but briefly holds compose state. Press it then Space if needed.
- *
- *   ⚠  < and > cannot be typed on macOS Norwegian + ANSI hardware.
- *      The Norwegian < key requires the ISO NUBS key (between LShift and Z),
- *      which does not exist on ANSI boards. Workaround: add "ABC" as a second
- *      macOS input source and switch to it for coding (⌘ + Space / Ctrl+Space).
+ *  ⚠  LA(RBKT) → ~ is a dead key. Works fine, but briefly holds compose state.
+ *  ⚠  < and > require the ISO NUBS key which doesn't exist on ANSI boards.
+ *     Workaround: switch macOS input source to "ABC" for coding sessions.
  */
 
 #include <dt-bindings/zmk/stp.h>
@@ -66,12 +73,10 @@
 
         /*
          * hm — Homerow Mod (hold-tap)
-         * ─────────────────────────────────────────────────────────────────────
-         * Hold → modifier key    Tap → normal character
-         *
-         * tapping-term-ms  200ms  — window to decide tap vs hold
-         * quick-tap-ms     175ms  — fast double-tap repeats the tap key
-         * flavor           tap-preferred — prefers tap unless held past term
+         * Hold = modifier, Tap = character
+         * tapping-term-ms 200ms : window to decide tap vs hold
+         * quick-tap-ms    175ms : fast double-tap repeats the tap key
+         * flavor tap-preferred  : prefers tap unless held past term
          */
         hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
@@ -90,24 +95,30 @@
         /* ╔══════════════════════════════════════════════════════════════════╗
            ║  LAYER 0 — MAC BASE                                             ║
            ║                                                                  ║
-           ║  Standard QWERTY with macOS homerow mods on ASDF / JKL;        ║
-           ║  Hold A=GUI  S=Alt  D=Ctrl  F=Shift (mirrored on right hand)   ║
-           ║  mo 5 (Sym) on bottom-left thumb cluster key                    ║
+           ║  QWERTY with macOS homerow mods on ASDF / JKL;                 ║
+           ║  Hold: A=GUI  S=Alt  D=Ctrl  F=Shift (mirrored right hand)     ║
+           ║  [inner-top-L] = switch to Win layer                            ║
+           ║  [T2] = hold for Sym layer (mo 5)                               ║
+           ║  [mo2-L/R] = hold for Media layer                               ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         default_layer {
             display-name = "Mac";
             bindings = <
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-   &kp EQUAL  &kp N1     &kp N2     &kp N3     &kp N4     &kp N5     &to 1                  &mo 3      &kp N6     &kp N7     &kp N8     &kp N9     &kp N0     &kp MINUS
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &kp TAB    &kp Q      &kp W      &kp E      &kp R      &kp T      &none                  &none      &kp Y      &kp U      &kp I      &kp O      &kp P      &kp BSLH
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &kp ESC    &hm LGUI A &hm LALT S &hm LCTRL D &hm LSHFT F &kp G   &none      &kp LCTRL  &kp LALT   &kp LGUI   &kp RCTRL  &none      &kp H      &hm RSHFT J &hm RCTRL K &hm RALT L &hm RGUI SEMI &kp SQT
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼───────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &kp LSHFT  &kp Z      &kp X      &kp C      &kp V      &kp B                 &kp HOME   &kp PG_UP             &kp N      &kp M      &kp COMMA  &kp DOT    &kp FSLH   &kp RSHFT
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────────────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &mo 2      &kp GRAVE  &kp CAPS   &kp LEFT   &kp RIGHT             &kp BSPC   &mo 5      &kp END    &kp PG_DN  &kp ENTER  &kp SPACE             &kp UP     &kp DOWN   &kp LBKT   &kp RBKT   &mo 2
-/* └─────────┴──────────┴──────────┴──────────┴──────────┘           └──────────┴──────────┴──────────┘          └──────────┴──────────┴──────────┴──────────┴──────────┘ */
+/* ── Row 1: number row ── pos 1–7 left │ pos 8–14 right ── */
+/*[1]=     [2]=1     [3]=2     [4]=3     [5]=4     [6]=5     [7]=to-Win       [8]=mo-Fn  [9]=6     [10]=7    [11]=8    [12]=9    [13]=0    [14]=+     */
+  &kp EQUAL &kp N1    &kp N2    &kp N3    &kp N4    &kp N5    &to 1                      &mo 3      &kp N6    &kp N7    &kp N8    &kp N9    &kp N0    &kp MINUS
+/* ── Row 2: QWERTY top row ── pos 15–21 left │ pos 22–28 right ── */
+/*[15]=Tab [16]=Q    [17]=W    [18]=E    [19]=R    [20]=T    [21]=none        [22]=none  [23]=Y    [24]=U    [25]=I    [26]=O    [27]=P    [28]='    */
+  &kp TAB   &kp Q     &kp W     &kp E     &kp R     &kp T     &none                      &none      &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BSLH
+/* ── Row 3: home row + 4 thumb keys (pos 36–39) ── pos 29–35 left │ 36–39 thumbs │ 40–46 right ── */
+/*[29]=Esc [30]=A    [31]=S    [32]=D    [33]=F    [34]=G    [35]=none [36]=Ctrl [37]=Alt  [38]=GUI  [39]=Ctrl [40]=none [41]=H    [42]=J    [43]=K    [44]=L    [45]=ø    [46]=æ   */
+  &kp ESC   &hm LGUI A &hm LALT S &hm LCTRL D &hm LSHFT F &kp G &none  &kp LCTRL &kp LALT  &kp LGUI  &kp RCTRL &none     &kp H     &hm RSHFT J &hm RCTRL K &hm RALT L &hm RGUI SEMI &kp SQT
+/* ── Row 4: bottom row + 2 inner thumb-adjacent keys (pos 53–54) ── pos 47–52 left │ 53–54 inner │ 55–60 right ── */
+/*[47]=LS  [48]=Z    [49]=X    [50]=C    [51]=V    [52]=B    [53]=Home [54]=PgUp [55]=N    [56]=M    [57]=,    [58]=.    [59]=-    [60]=RS   */
+  &kp LSHFT &kp Z     &kp X     &kp C     &kp V     &kp B               &kp HOME  &kp PG_UP           &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
+/* ── Row 5: nav row + 6 thumb keys (pos 66–71) ── pos 61–65 left │ 66–71 thumbs │ 72–76 right ── */
+/*[61]=m2  [62]=§    [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=Sym  [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
+  &mo 2     &kp GRAVE &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &mo 5     &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
             >;
         };
 
@@ -115,183 +126,171 @@
            ║  LAYER 1 — WINDOWS BASE                                         ║
            ║                                                                  ║
            ║  Same layout as Mac but homerow mods adjusted for Windows:      ║
-           ║  Hold A=Ctrl  S=Alt  D=Ctrl  F=Shift (no GUI/Win on homerow)   ║
-           ║  DEL replaces mo 5 in thumb cluster (Win uses DEL more)         ║
+           ║  Hold: A=Ctrl  S=Alt  D=Ctrl  F=Shift                          ║
+           ║  [T2] = DEL (Windows uses DEL more than Mac)                    ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         win_layer {
             display-name = "Win";
             bindings = <
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-   &kp EQUAL  &kp N1     &kp N2     &kp N3     &kp N4     &kp N5     &to 0                  &mo 3      &kp N6     &kp N7     &kp N8     &kp N9     &kp N0     &kp MINUS
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &kp TAB    &kp Q      &kp W      &kp E      &kp R      &kp T      &none                  &none      &kp Y      &kp U      &kp I      &kp O      &kp P      &kp BSLH
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &kp ESC    &hm LCTRL A &hm LALT S &hm LCTRL D &hm LSHFT F &kp G  &none      &kp LCTRL  &kp LALT   &kp LGUI   &kp RCTRL  &none      &kp H      &hm RSHFT J &hm RCTRL K &hm RALT L &hm RCTRL SEMI &kp SQT
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼───────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &kp LSHFT  &kp Z      &kp X      &kp C      &kp V      &kp B                 &kp HOME   &kp PG_UP             &kp N      &kp M      &kp COMMA  &kp DOT    &kp FSLH   &kp RSHFT
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────────────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &mo 2      &kp GRAVE  &kp CAPS   &kp LEFT   &kp RIGHT             &kp BSPC   &kp DEL    &kp END    &kp PG_DN  &kp ENTER  &kp SPACE             &kp UP     &kp DOWN   &kp LBKT   &kp RBKT   &mo 2
-/* └─────────┴──────────┴──────────┴──────────┴──────────┘           └──────────┴──────────┴──────────┘          └──────────┴──────────┴──────────┴──────────┴──────────┘ */
+/* ── Row 1 ── */
+/*[1]=     [2]=1     [3]=2     [4]=3     [5]=4     [6]=5     [7]=to-Mac       [8]=mo-Fn  [9]=6     [10]=7    [11]=8    [12]=9    [13]=0    [14]=+    */
+  &kp EQUAL &kp N1    &kp N2    &kp N3    &kp N4    &kp N5    &to 0                      &mo 3      &kp N6    &kp N7    &kp N8    &kp N9    &kp N0    &kp MINUS
+/* ── Row 2 ── */
+/*[15]=Tab [16]=Q    [17]=W    [18]=E    [19]=R    [20]=T    [21]=none        [22]=none  [23]=Y    [24]=U    [25]=I    [26]=O    [27]=P    [28]='    */
+  &kp TAB   &kp Q     &kp W     &kp E     &kp R     &kp T     &none                      &none      &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BSLH
+/* ── Row 3 + thumbs ── */
+/*[29]=Esc [30]=A    [31]=S    [32]=D    [33]=F    [34]=G    [35]=none [36]=Ctrl [37]=Alt  [38]=GUI  [39]=Ctrl [40]=none [41]=H    [42]=J    [43]=K    [44]=L    [45]=ø    [46]=æ   */
+  &kp ESC   &hm LCTRL A &hm LALT S &hm LCTRL D &hm LSHFT F &kp G &none &kp LCTRL &kp LALT  &kp LGUI  &kp RCTRL &none     &kp H     &hm RSHFT J &hm RCTRL K &hm RALT L &hm RCTRL SEMI &kp SQT
+/* ── Row 4 ── */
+/*[47]=LS  [48]=Z    [49]=X    [50]=C    [51]=V    [52]=B    [53]=Home [54]=PgUp [55]=N    [56]=M    [57]=,    [58]=.    [59]=-    [60]=RS   */
+  &kp LSHFT &kp Z     &kp X     &kp C     &kp V     &kp B               &kp HOME  &kp PG_UP           &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
+/* ── Row 5 + thumbs ── */
+/*[61]=m2  [62]=§    [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=DEL  [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
+  &mo 2     &kp GRAVE &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &kp DEL   &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
             >;
         };
 
         /* ╔══════════════════════════════════════════════════════════════════╗
            ║  LAYER 2 — MEDIA                                                 ║
            ║                                                                  ║
-           ║  Left hand  → Playback transport controls                        ║
+           ║  Left hand  → Playback transport                                 ║
            ║  Right hand → Volume + Brightness                                ║
-           ║  Number row → Quick app launchers (browser, mail, calc)          ║
-           ║  Thumb      → Mute on left thumb, play/pause on right thumb      ║
+           ║  Row 1      → App launchers (browser, mail, files, calc, music)  ║
+           ║  Thumb T1   → Mute     Thumb T2 → Play/Pause                    ║
            ║                                                                  ║
-           ║  Visual map of home row (Row 3):                                 ║
-           ║    |<< |  rew  |  ◀◀  |  ▶/॥  |  ▶▶  |  >>|  |     |          ║
-           ║    |   |  v-   |  mute |  v+   |      |      |     |            ║
+           ║  Home row transport (left hand):                                 ║
+           ║    A=|<<   S=◀◀   D=▶/⏸   F=▶▶   G=>>|                        ║
+           ║  Home row volume (right hand):                                   ║
+           ║    J=Vol-   K=Mute   L=Vol+                                     ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         media {
             display-name = "Media";
             bindings = <
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-/* │  trans  │  Browser │  Mail    │  Files   │  Calc    │  Music   │  trans  ║  mo 3    │  trans   │  trans   │  trans   │  trans   │  trans   │  trans   │ */
-   &trans     &kp C_AL_WWW &kp C_AL_EMAIL &kp C_AL_FILES &kp C_AL_CALC &kp C_AL_MUSIC &trans   &mo 3      &trans     &trans     &trans     &trans     &trans     &trans
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │  trans  │  trans   │  trans   │  trans   │  trans   │  trans   │  none   ║  none    │  trans   │  Brght+  │  Brght+  │  Brght-  │  Brght-  │  trans   │ */
-   &trans     &trans     &trans     &trans     &trans     &trans     &none                  &none      &trans     &kp C_BRI_UP &kp C_BRI_UP &kp C_BRI_DN &kp C_BRI_DN &trans
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │  trans  │  |<<     │  <<      │  ▶/॥     │  >>      │  >>|     │  none   ║  none    │  trans   │  trans   │  trans   │  Vol -   │  Mute    │  Vol +   │  trans   │  trans   │ */
-   &trans     &kp C_PREV  &kp C_RW  &kp C_PP   &kp C_FF   &kp C_NEXT &none      &trans     &trans     &trans     &trans     &none      &trans     &kp C_VOL_DN &kp C_MUTE &kp C_VOL_UP &trans     &trans
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼───────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │  trans  │  trans   │  trans   │  Stop    │  trans   │  trans   │  Home    │  PgUp    │  trans   │  trans   │  trans   │  trans   │  trans   │  trans   │ */
-   &trans     &trans     &trans     &kp C_STOP &trans     &trans                &kp HOME   &kp PG_UP             &trans     &trans     &trans     &trans     &trans     &trans
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────────────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │  mo 2   │  trans   │  trans   │  trans   │  trans   │           │  Mute   │  ▶/॥    │  End     │  PgDn    │  Enter   │  Space   │           │  trans   │  trans   │  trans   │  trans   │  mo 2   │ */
-   &mo 2      &trans     &trans     &trans     &trans                &kp C_MUTE &kp C_PP  &kp END    &kp PG_DN  &kp ENTER  &kp SPACE             &trans     &trans     &trans     &trans     &mo 2
-/* └─────────┴──────────┴──────────┴──────────┴──────────┘           └──────────┴──────────┴──────────┘          └──────────┴──────────┴──────────┴──────────┴──────────┘ */
+/* ── Row 1: app launchers on inner keys ── */
+/*[1]=     [2]=Web   [3]=Mail  [4]=Files [5]=Calc  [6]=Music [7]=trans        [8]=mo-Fn  [9]=trans [10]=trans[11]=trans[12]=trans[13]=trans[14]=trans */
+  &trans    &kp C_AL_WWW &kp C_AL_EMAIL &kp C_AL_FILES &kp C_AL_CALC &kp C_AL_MUSIC &trans   &mo 3      &trans    &trans    &trans    &trans    &trans    &trans
+/* ── Row 2: brightness on right hand ── */
+/*[15]=tr  [16]=tr   [17]=tr   [18]=tr   [19]=tr   [20]=tr   [21]=none        [22]=none  [23]=tr   [24]=tr   [25]=Br+  [26]=Br+  [27]=Br-  [28]=Br-  */
+  &trans    &trans    &trans    &trans    &trans    &trans    &none                      &none      &trans    &trans    &kp C_BRI_UP &kp C_BRI_UP &kp C_BRI_DN &kp C_BRI_DN
+/* ── Row 3: transport left / volume right + thumbs pass-through ── */
+/*[29]=tr  [30]=|<<  [31]=◀◀   [32]=▶/⏸ [33]=▶▶   [34]=>>|  [35]=none [36]=tr   [37]=tr   [38]=tr   [39]=tr   [40]=none [41]=tr   [42]=Vol- [43]=Mute [44]=Vol+ [45]=tr   [46]=tr  */
+  &trans    &kp C_PREV &kp C_RW &kp C_PP  &kp C_FF  &kp C_NEXT &none   &trans    &trans    &trans    &trans    &none     &trans    &kp C_VOL_DN &kp C_MUTE &kp C_VOL_UP &trans  &trans
+/* ── Row 4: stop on left, nav pass-through ── */
+/*[47]=tr  [48]=tr   [49]=tr   [50]=Stop [51]=tr   [52]=tr   [53]=Home [54]=PgUp [55]=tr   [56]=tr   [57]=tr   [58]=tr   [59]=tr   [60]=tr   */
+  &trans    &trans    &trans    &kp C_STOP &trans   &trans              &kp HOME  &kp PG_UP           &trans    &trans    &trans    &trans    &trans    &trans
+/* ── Row 5: Mute on T1, Play/Pause on T2, rest pass-through ── */
+/*[61]=m2  [62]=tr   [63]=tr   [64]=tr   [65]=tr   [66]=Mute [67]=▶/⏸ [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=tr   [73]=tr   [74]=tr   [75]=tr   [76]=m2   */
+  &mo 2     &trans    &trans    &trans    &trans              &kp C_MUTE &kp C_PP &kp END   &kp PG_DN &kp ENTER &kp SPACE           &trans    &trans    &trans    &trans    &mo 2
             >;
         };
 
         /* ╔══════════════════════════════════════════════════════════════════╗
            ║  LAYER 3 — FN (FUNCTION KEYS)                                    ║
            ║                                                                  ║
-           ║  F1–F6 replace the number row left half                          ║
-           ║  F7–F12 replace the number row right half                        ║
-           ║  All other keys pass through (&trans)                            ║
+           ║  F1–F6 on left number row, F7–F12 on right number row            ║
+           ║  All other keys transparent (pass through to active base layer)  ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         fn {
             display-name = "Fn";
             bindings = <
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-/* │  F1     │  F2      │  F3      │  F4      │  F5      │  F6      │  trans  ║  mo 4    │  F7      │  F8      │  F9      │  F10     │  F11     │  F12     │ */
-   &kp F1     &kp F2     &kp F3     &kp F4     &kp F5     &kp F6     &trans                 &mo 4      &kp F7     &kp F8     &kp F9     &kp F10    &kp F11    &kp F12
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &trans     &trans     &trans     &trans     &trans     &trans     &none                  &none      &trans     &trans     &trans     &trans     &trans     &trans
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &trans     &trans     &trans     &trans     &trans     &trans     &none      &trans     &trans     &trans     &trans     &none      &trans     &trans     &trans     &trans     &trans     &trans
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼───────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &trans     &trans     &trans     &trans     &trans     &trans                &trans     &trans                &trans     &trans     &trans     &trans     &trans     &trans
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────────────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-   &trans     &trans     &trans     &trans     &trans                &trans     &trans     &trans     &trans     &trans     &trans                &trans     &trans     &trans     &trans     &trans
-/* └─────────┴──────────┴──────────┴──────────┴──────────┘           └──────────┴──────────┴──────────┘          └──────────┴──────────┴──────────┴──────────┴──────────┘ */
+/* ── Row 1: F keys ── */
+/*[1]=F1   [2]=F2    [3]=F3    [4]=F4    [5]=F5    [6]=F6    [7]=trans        [8]=mo-Mod [9]=F7    [10]=F8   [11]=F9   [12]=F10  [13]=F11  [14]=F12  */
+  &kp F1    &kp F2    &kp F3    &kp F4    &kp F5    &kp F6    &trans                     &mo 4      &kp F7    &kp F8    &kp F9    &kp F10   &kp F11   &kp F12
+/* ── Rows 2–5: all transparent ── */
+  &trans    &trans    &trans    &trans    &trans    &trans    &none                      &none      &trans    &trans    &trans    &trans    &trans    &trans
+  &trans    &trans    &trans    &trans    &trans    &trans    &none     &trans    &trans    &trans    &trans    &none     &trans    &trans    &trans    &trans    &trans    &trans
+  &trans    &trans    &trans    &trans    &trans    &trans              &trans    &trans              &trans    &trans    &trans    &trans    &trans    &trans
+  &trans    &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &trans
             >;
         };
 
         /* ╔══════════════════════════════════════════════════════════════════╗
            ║  LAYER 4 — MOD (BLUETOOTH / RGB / BACKLIGHT / FIRMWARE)         ║
            ║                                                                  ║
-           ║  Row 1  : BT profile select (0–4) on N1–N5                      ║
-           ║  Row 3  : BT clear, studio unlock                                ║
-           ║  Row 4  : Firmware version macro                                 ║
-           ║  Row 5  : Backlight toggle/inc/dec + RGB toggle                  ║
-           ║  Bootloader on both inner column Row 2 keys                      ║
+           ║  Row 1  N1–N5 : Bluetooth profile select 0–4                    ║
+           ║  Row 2  inner : Bootloader on both inner column keys             ║
+           ║  Row 3  left  : studio_unlock (enables ZMK Studio live edit)     ║
+           ║  Row 3  right : BT clear, battery status                         ║
+           ║  Row 4  V     : firmware version macro                           ║
+           ║  Row 5  T5/T6 : backlight toggle/inc/dec + RGB toggle            ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         mod {
             display-name = "Mod";
             bindings = <
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-/* │  none   │  BT 0    │  BT 1    │  BT 2    │  BT 3    │  BT 4    │  none   ║  trans   │  none    │  none    │  none    │  none    │  none    │  none    │ */
-   &none      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none      &trans     &none      &none      &none      &none      &none      &none
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │  none   │  none    │  none    │  none    │  none    │  none    │ BOOTLOAD ║ BOOTLOAD │  none    │  none    │  none    │  none    │  none    │  none    │ */
-   &none      &none      &none      &none      &none      &none      &bootloader            &bootloader &none     &none      &none      &none      &none      &none
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────╫──────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │ UNLOCK  │  none    │  none    │  none    │  none    │  none    │  none   ║  none    │  BT CLR  │  none    │  none    │  none    │  none    │  none    │ */
-/* studio_unlock allows editing the keymap live in ZMK Studio                                                                                                  */
-   &studio_unlock &none  &none      &none      &none      &none      &none      &none      &none      &none      &bt BT_CLR &none      &stp STP_BAT &none    &none      &none      &none      &none
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────┼───────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │  none   │  none    │  none    │  none    │ FW VER   │  none    │          │  none    │  none    │           │  none    │  none    │  none    │  none    │  none    │  none    │ */
-   &none      &none      &none      &none      &macro_ver  &none                &none      &none                 &none      &none      &none      &none      &none      &none
-/* ├─────────┼──────────┼──────────┼──────────┼──────────┼──────────────────────────────────────────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┤ */
-/* │  none   │  none    │  none    │  none    │  none    │           │  none   │  none    │  none    │  none    │  BL TOG  │  RGB TOG │           │  BL INC  │  BL DEC  │  none    │  none    │  none   │ */
-   &none      &none      &none      &none      &none                &none      &none      &none      &none      &bl BL_TOG &rgb_ug RGB_TOG        &bl BL_INC &bl BL_DEC &none      &none      &none
-/* └─────────┴──────────┴──────────┴──────────┴──────────┘           └──────────┴──────────┴──────────┘          └──────────┴──────────┴──────────┴──────────┴──────────┘ */
+/* ── Row 1: Bluetooth profile select ── */
+/*[1]=none [2]=BT0   [3]=BT1   [4]=BT2   [5]=BT3   [6]=BT4   [7]=none         [8]=trans  [9]=none  [10]=none [11]=none [12]=none [13]=none [14]=none */
+  &none     &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none       &trans     &none     &none     &none     &none     &none     &none
+/* ── Row 2: bootloader on both inner column keys ── */
+/*[15]=none[16]=none [17]=none [18]=none [19]=none [20]=none [21]=BOOT        [22]=BOOT  [23]=none [24]=none [25]=none [26]=none [27]=none [28]=none */
+  &none     &none     &none     &none     &none     &none     &bootloader                &bootloader &none     &none     &none     &none     &none     &none
+/* ── Row 3: studio unlock left / BT clear + battery right ── */
+/*[29]=UNLK[30]=none [31]=none [32]=none [33]=none [34]=none [35]=none [36]=none [37]=none [38]=BTclr[39]=none [40]=BAT  [41]=none [42]=none [43]=none [44]=none [45]=none [46]=none */
+  &studio_unlock &none &none   &none     &none     &none     &none     &none     &none     &bt BT_CLR &none    &stp STP_BAT &none  &none     &none     &none     &none     &none
+/* ── Row 4: firmware version on V key ── */
+/*[47]=none[48]=none [49]=none [50]=none [51]=FWver[52]=none [53]=none [54]=none [55]=none [56]=none [57]=none [58]=none [59]=none [60]=none */
+  &none     &none     &none     &none     &macro_ver &none               &none     &none               &none     &none     &none     &none     &none     &none
+/* ── Row 5: backlight and RGB on thumb cluster ── */
+/*[61]=none[62]=none [63]=none [64]=none [65]=none [66]=none [67]=none [68]=none [69]=none [70]=BLtog[71]=RGBtg[72]=BLinc[73]=BLdec[74]=none [75]=none [76]=none */
+  &none     &none     &none     &none     &none               &none     &none     &none     &none     &bl BL_TOG &rgb_ug RGB_TOG     &bl BL_INC &bl BL_DEC &none   &none     &none
             >;
         };
 
         /* ╔══════════════════════════════════════════════════════════════════╗
            ║  LAYER 5 — SYM (SYMBOLS)                                        ║
            ║                                                                  ║
-           ║  Optimised for macOS Norwegian + ANSI hardware.                  ║
-           ║  Activated by holding the left inner thumb key (mo 5).           ║
+           ║  Hold [T2] on base layer to activate.                            ║
            ║                                                                  ║
-           ║  Design logic:                                                   ║
-           ║  • Home row: bracket pairs — left opens, right closes            ║
-           ║      pinky={  ring=[  middle=(  index=|  index=\                 ║
-           ║      index=/  index=)  middle=]  ring=}  pinky=~                 ║
-           ║  • Upper row: shell symbols left (! @ # $ %), arithmetic right   ║
-           ║      (^ & * + = €)                                               ║
-           ║  • Lower row: punctuation (; : , . ?) left, (" - _) right        ║
-           ║  • § and ° preserved on outer keys of number row                 ║
+           ║  Home row design — left opens, right closes:                     ║
+           ║    A={   S=[   D=(   F=|   G=\                                  ║
+           ║    H=/   J=)   K=]   L=}   ;=~                                  ║
+           ║                                                                  ║
+           ║  Upper row (QWERTY):                                             ║
+           ║    Q=`   W=!   E=@   R=#   T=$   Y=%   U=^   I=&   O=*   P=+   ║
+           ║                                                                  ║
+           ║  Lower row:                                                      ║
+           ║    Z=;   X=:   C=,   V=.   B=?   N="   M=-   ,=_               ║
+           ║                                                                  ║
+           ║  Number row edge keys:  = (pos 1) → §   - (pos 14) → °         ║
+           ║                                                                  ║
+           ║  All verified against macOS Norwegian + ANSI hardware.           ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         symbol {
             display-name = "Sym";
             bindings = <
-
-/* ── ROW 1: § on far left, number keys pass through, ° on far right ─────────────────────────────────────────── */
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-/* │  §      │  1       │  2       │  3       │  4       │  5       │  trans  ║  trans   │  6       │  7       │  8       │  9       │  0       │  °       │ */
-   &kp GRAVE  &kp N1     &kp N2     &kp N3     &kp N4     &kp N5     &trans                 &trans     &kp N6     &kp N7     &kp N8     &kp N9     &kp N0     &kp LS(GRAVE)
-/* └─────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────╨──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘ */
-
-/* ── ROW 2: ` ! @ # $ %  left │  ^ & * + = €  right ───────────────────────────────────────────────────────── */
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-/* │  `      │  !       │  @       │  #       │  $       │  %       │  none   ║  none    │  ^       │  &       │  *       │  +       │  =       │  €       │ */
-   &kp LS(EQUAL) &kp LS(N1) &kp LA(N2) &kp LS(N3) &kp LA(N4) &kp LS(N5) &none              &none      &kp LS(RBKT) &kp LS(N6) &kp LS(BSLH) &kp MINUS &kp LS(N0) &kp LA(LS(N2))
-/* └─────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────╨──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘ */
-
-/* ── ROW 3: HOME ROW — { [ ( | \  left │  / ) ] } ~  right ─────────────────────────────────────────────────── */
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐ */
-/* │  trans  │  {       │  [       │  (       │  |       │  \       │  none   ║  none    │  /       │  )       │  ]       │  }       │  ~⚠      │  trans   │ */
-   &trans     &kp LA(LS(N8)) &kp LA(N8) &kp LS(N8) &kp LA(N6) &kp EQUAL  &none      &trans     &trans     &trans     &trans     &none      &kp LS(N7) &kp LS(N9) &kp LA(N9) &kp LA(LS(N9)) &kp LA(RBKT) &trans
-/* │         │  {           [          (          |          \                                        /          )          ]          }          ~⚠          │ */
-/* │  EQUAL → \ on macOS Norwegian. LA(RBKT) → ~ dead key, works but brief compose state hold.                                                               │ */
-/* └─────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────╨──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘ */
-
-/* ── ROW 4: ;  :  ,  .  ?  left │  "  -  _  right ──────────────────────────────────────────────────────────── */
-/* ┌─────────┬──────────┬──────────┬──────────┬──────────┬──────────╥──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐               */
-/* │  trans  │  ;       │  :       │  ,       │  .       │  ?       ║  "       │  -       │  _       │  trans   │  trans   │  trans   │               */
-   &trans     &kp LS(COMMA) &kp LS(DOT) &kp COMMA &kp DOT   &kp LS(MINUS)              &trans     &trans                 &kp LS(N2) &kp FSLH   &kp LS(FSLH) &trans     &trans     &trans
-/* └─────────┴──────────┴──────────┴──────────┴──────────┴──────────╨──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘               */
-
-/* ── ROW 5: thumb / edit cluster — BSPC and DEL, rest pass through ──────────────────────────────────────────── */
-   &trans     &trans     &trans     &trans     &trans                &kp BSPC   &kp DEL    &trans     &trans     &trans     &trans                &trans     &trans     &trans     &trans     &trans
-
+/* ── Row 1: § and ° on outer edges, numbers pass through ── */
+/*[1]=§    [2]=1     [3]=2     [4]=3     [5]=4     [6]=5     [7]=trans        [8]=trans  [9]=6     [10]=7    [11]=8    [12]=9    [13]=0    [14]=°    */
+  &kp GRAVE &kp N1    &kp N2    &kp N3    &kp N4    &kp N5    &trans                     &trans     &kp N6    &kp N7    &kp N8    &kp N9    &kp N0    &kp LS(GRAVE)
+/* ── Row 2: ` ! @ # $ % on left │ ^ & * + = € on right ── */
+/*[15]=`   [16]=!    [17]=@    [18]=#    [19]=$    [20]=%    [21]=none        [22]=none  [23]=^    [24]=&    [25]=*    [26]=+    [27]==    [28]=€    */
+  &kp LS(EQUAL) &kp LS(N1) &kp LA(N2) &kp LS(N3) &kp LA(N4) &kp LS(N5) &none           &none      &kp LS(RBKT) &kp LS(N6) &kp LS(BSLH) &kp MINUS &kp LS(N0) &kp LA(LS(N2))
+/* ── Row 3: brackets on home row + thumbs transparent ── */
+/*[29]=tr  [30]={    [31]=[    [32]=(    [33]=|    [34]=\    [35]=none [36]=tr   [37]=tr   [38]=tr   [39]=tr   [40]=none [41]=/    [42]=)    [43]=]    [44]=}    [45]=~⚠   [46]=tr  */
+/*         LA(LS8)   LA(N8)    LS(N8)    LA(N6)    EQUAL                                                                          LS(N7)    LS(N9)    LA(N9)    LA(LS9)   LA(RBKT)        */
+  &trans    &kp LA(LS(N8)) &kp LA(N8) &kp LS(N8) &kp LA(N6) &kp EQUAL &none    &trans    &trans    &trans    &trans    &none     &kp LS(N7) &kp LS(N9) &kp LA(N9) &kp LA(LS(N9)) &kp LA(RBKT) &trans
+/* ── Row 4: punctuation ── */
+/*[47]=tr  [48]=;    [49]=:    [50]=,    [51]=.    [52]=?    [53]=tr   [54]=tr   [55]="    [56]=-    [57]=_    [58]=tr   [59]=tr   [60]=tr   */
+  &trans    &kp LS(COMMA) &kp LS(DOT) &kp COMMA &kp DOT &kp LS(MINUS)  &trans    &trans              &kp LS(N2) &kp FSLH  &kp LS(FSLH) &trans  &trans    &trans
+/* ── Row 5: BSPC on T1, DEL on T2, rest transparent ── */
+/*[61]=tr  [62]=tr   [63]=tr   [64]=tr   [65]=tr   [66]=BSPC [67]=DEL  [68]=tr   [69]=tr   [70]=tr   [71]=tr   [72]=tr   [73]=tr   [74]=tr   [75]=tr   [76]=tr   */
+  &trans    &trans    &trans    &trans    &trans              &kp BSPC  &kp DEL   &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &trans
             >;
         };
 
         /* ── Reserved layers ─────────────────────────────────────────────── */
 
-        /* Layer 6 — Reserved (shown as "Red" in ZMK Studio) */
+        /* Layer 6 — Reserved (Red in ZMK Studio) */
         extra1 {
             display-name = "Red";
             status = "reserved";
         };
 
-        /* Layer 7 — Reserved (shown as "Purple" in ZMK Studio) */
+        /* Layer 7 — Reserved (Purple in ZMK Studio) */
         extra2 {
             display-name = "Purple";
             status = "reserved";
         };
 
-        /* Layer 8 — Reserved (shown as "Cyan" in ZMK Studio) */
+        /* Layer 8 — Reserved (Cyan in ZMK Studio) */
         extra3 {
             display-name = "Cyan";
             status = "reserved";
