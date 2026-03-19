@@ -52,7 +52,7 @@
  *   LS(N6)            &         LS(N7)               /
  *   LS(N8)            (         LS(N9)               )
  *   LS(N0)            =
- *   LA(N2)            ™         LA(N4)               €
+ *   LA(N2)            ™         LA(N4)               $
  *   LA(N6)            §  (!)    LA(N7)               |
  *   LA(LS(N7))        \         LA(N8)               [
  *   LA(N9)            ]         LA(LS(N8))           {
@@ -245,41 +245,49 @@
            ║                                                                  ║
            ║  Hold [T2] on base layer to activate.                            ║
            ║                                                                  ║
-           ║  Home row design — left opens, right closes:                     ║
+           ║  Home row — left opens, right closes:                            ║
            ║    A={   S=[   D=(   F=|   G=\                                  ║
            ║    H=/   J=)   K=]   L=}   ;=~                                  ║
            ║                                                                  ║
-           ║  Upper row (QWERTY):                                             ║
-           ║    Q=`   W=!   E=@   R=#   T=$   Y=%   U=^   I=&   O=*   P=+   ║
+           ║  Upper row (QWERTY keys):                                        ║
+           ║    Tab=`  Q=!  W=@  E=#  R=$  T=%                               ║
+           ║    Y=^   U=&   I=*  O=+  P==  \=€                               ║
            ║                                                                  ║
            ║  Lower row:                                                      ║
            ║    Z=;   X=:   C=,   V=.   B=?   N="   M=-   ,=_               ║
            ║                                                                  ║
-           ║  Number row edge keys:  = (pos 1) → §   - (pos 14) → °         ║
+           ║  Number row edges: = → §   - → °                                ║
            ║                                                                  ║
-           ║  All verified against macOS Norwegian + ANSI hardware.           ║
+           ║  All confirmed on macOS Norwegian ISO + Ghostty                  ║
+           ║  (macos-option-as-alt = false required in Ghostty config)        ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         symbol {
             display-name = "Sym";
             bindings = <
-/* ── Row 1: § and ° on outer edges, numbers pass through ── */
+
+/* ── Row 1: § on far left, numbers pass through, ° on far right ── */
 /*[1]=§    [2]=1     [3]=2     [4]=3     [5]=4     [6]=5     [7]=trans        [8]=trans  [9]=6     [10]=7    [11]=8    [12]=9    [13]=0    [14]=°    */
   &kp GRAVE &kp N1    &kp N2    &kp N3    &kp N4    &kp N5    &trans                     &trans     &kp N6    &kp N7    &kp N8    &kp N9    &kp N0    &kp LS(GRAVE)
-/* ── Row 2: ` ! @ # € % on left │ ^ & * + = ™ on right ── */
-/*[15]=`   [16]=!    [17]=@    [18]=#    [19]=€    [20]=%    [21]=none        [22]=none  [23]=^    [24]=&    [25]=*    [26]=+    [27]==    [28]=™    */
-/* @ = BSLH: the dedicated @ key on Norwegian ISO — no modifier needed!     */
-/* € = LA(N4), ™ = LA(N2) — both confirmed on this layout                   */
-  &kp LS(EQUAL) &kp LS(N1) &kp BSLH   &kp LS(N3) &kp LA(N4) &kp LS(N5) &none           &none      &kp LS(RBKT) &kp LS(N6) &kp LS(BSLH) &kp MINUS &kp LS(N0) &kp LA(N2)
-/* ── Row 3: brackets on home row + thumbs transparent ── */
-/*[29]=tr  [30]={    [31]=[    [32]=(    [33]=|    [34]=\    [35]=none [36]=tr   [37]=tr   [38]=tr   [39]=tr   [40]=none [41]=/    [42]=)    [43]=]    [44]=}    [45]=~    [46]=tr  */
-/* | = LA(N7) = Option+7 confirmed    \ = LA(LS(N7)) = Option+Shift+7 confirmed */
-  &trans    &kp LA(LS(N8)) &kp LA(N8) &kp LS(N8) &kp LA(N7) &kp LA(LS(N7)) &none  &trans    &trans    &trans    &trans    &none     &kp LS(N7) &kp LS(N9) &kp LA(N9) &kp LA(LS(N9)) &kp LA(RBKT) &trans
-/* ── Row 4: punctuation ── */
-/*[47]=tr  [48]=;    [49]=:    [50]=,    [51]=.    [52]=?    [53]=tr   [54]=tr   [55]="    [56]=-    [57]=_    [58]=tr   [59]=tr   [60]=tr   */
-  &trans    &kp LS(COMMA) &kp LS(DOT) &kp COMMA &kp DOT &kp LS(MINUS)  &trans    &trans              &kp LS(N2) &kp FSLH  &kp LS(FSLH) &trans  &trans    &trans
+
+/* ── Row 2: Q=^  W=@  E=#  R=!  T=~  │  Y=|  U=*  I==  O=+  P=%  \=€ ── */
+/*[15]=`   [16]=^    [17]=@    [18]=#    [19]=!    [20]=~    [21]=none        [22]=none  [23]=|    [24]=*    [25]==    [26]=+    [27]=%    [28]=€    */
+/* Tab=`(bonus)  W=@ via BSLH (dedicated @ key, no modifier)                 */
+/* T=~ via LA(RBKT) — dead key, works fine, press then Space if needed        */
+/* N/M=<> via NON_US_BSLH — works if macOS detected keyboard as ISO type      */
+  &kp LS(EQUAL) &kp LS(RBKT) &kp BSLH &kp LS(N3) &kp LS(N1) &kp LA(RBKT) &none        &none      &kp LA(N7) &kp LS(BSLH) &kp LS(N0) &kp MINUS &kp LS(N5) &kp LA(LS(N2))
+
+/* ── Row 3: HOME ROW — A=-  S=[  D={  F=(  G='  │  H="  J=)  K=}  L=]  ø=_ ── */
+/*[29]=tr  [30]=-    [31]=[    [32]={    [33]=(    [34]='    [35]=none [36]=tr [37]=tr [38]=tr [39]=tr [40]=none [41]="    [42]=)    [43]=}    [44]=]    [45]=_    [46]=tr  */
+  &trans    &kp FSLH  &kp LA(N8) &kp LA(LS(N8)) &kp LS(N8) &kp LA(BSLH) &none  &trans  &trans  &trans  &trans  &none  &kp LS(N2) &kp LS(N9) &kp LA(LS(N9)) &kp LA(N9) &kp LS(FSLH) &trans
+
+/* ── Row 4: Z=&  X=$  C=\  V=/  B=?  │  N=<  M=>  ,=:  .=;  ── */
+/*[47]=tr  [48]=&    [49]=$    [50]=\    [51]=/    [52]=?    [53]=tr   [54]=tr   [55]=<    [56]=>    [57]=:    [58]=;    [59]=tr   [60]=tr   */
+  &trans    &kp LS(N6) &kp LA(N4) &kp LA(LS(N7)) &kp LS(N7) &kp LS(MINUS)  &trans  &trans  &kp NON_US_BSLH &kp LS(NON_US_BSLH) &kp LS(DOT) &kp LS(COMMA) &trans &trans
+
 /* ── Row 5: BSPC on T1, DEL on T2, rest transparent ── */
 /*[61]=tr  [62]=tr   [63]=tr   [64]=tr   [65]=tr   [66]=BSPC [67]=DEL  [68]=tr   [69]=tr   [70]=tr   [71]=tr   [72]=tr   [73]=tr   [74]=tr   [75]=tr   [76]=tr   */
   &trans    &trans    &trans    &trans    &trans              &kp BSPC  &kp DEL   &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &trans
+
             >;
         };
 
