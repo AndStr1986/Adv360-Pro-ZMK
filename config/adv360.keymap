@@ -32,31 +32,36 @@
  *
  *   ZMK keycode       Output    ZMK keycode          Output
  *   ──────────────────────────  ──────────────────────────────
+ *   All keycodes CONFIRMED on macOS Norwegian + ISO keyboard type (your setup).
+ *
+ *   ZMK keycode       Output    ZMK keycode          Output
+ *   ──────────────────────────  ──────────────────────────────
  *   FSLH              -         LS(FSLH)             _
  *   MINUS             +         LS(MINUS)            ?
- *   EQUAL             \         LS(EQUAL)            `  (backtick)
- *   GRAVE             §         LS(GRAVE)            °
+ *   BSLH              @  ←!     LS(BSLH)             *
+ *   LA(BSLH)          '         LS(EQUAL)            `  (backtick)
+ *   EQUAL             ´ (dead)  GRAVE                §
+ *   LS(GRAVE)         °         LS(RBKT)             ^
  *   LBKT              å         LS(LBKT)             Å
- *   RBKT              ¨ (dead)  LS(RBKT)             ^
- *   BSLH              '         LS(BSLH)             *
+ *   RBKT              ¨ (dead)  LA(RBKT)             ~  ⚠ dead key
  *   SEMI              ø         LS(SEMI)             Ø
  *   SQT               æ         LS(SQT)              Æ
  *   LS(COMMA)         ;         LS(DOT)              :
  *   LS(N1)            !         LS(N2)               "
- *   LS(N3)            #         LS(N4)               ¤ (NOT $)
- *   LS(N5)            %         LS(N6)               &
- *   LS(N7)            /         LS(N8)               (
- *   LS(N9)            )         LS(N0)               =
- *   LA(N2)            @         LA(N4)               $
- *   LA(N6)            |         LA(N8)               [
- *   LA(N9)            ]         LA(BSLH)             @  (alt)
- *   LA(RBKT)          ~ ⚠       LA(LS(N2))           €
- *   LA(LS(N7))        \         LA(LS(N8))           {
- *   LA(LS(N9))        }         EQUAL                \
+ *   LS(N3)            #         LS(N5)               %
+ *   LS(N6)            &         LS(N7)               /
+ *   LS(N8)            (         LS(N9)               )
+ *   LS(N0)            =
+ *   LA(N2)            ™         LA(N4)               €
+ *   LA(N6)            §  (!)    LA(N7)               |
+ *   LA(LS(N7))        \         LA(N8)               [
+ *   LA(N9)            ]         LA(LS(N8))           {
+ *   LA(LS(N9))        }
  *
- *  ⚠  LA(RBKT) → ~ is a dead key. Works fine, but briefly holds compose state.
- *  ⚠  < and > require the ISO NUBS key which doesn't exist on ANSI boards.
- *     Workaround: switch macOS input source to "ABC" for coding sessions.
+ *  ← BSLH = @ is the dedicated @ key on Norwegian ISO — no modifier needed!
+ *  ⚠  LA(RBKT) → ~ is a dead key. Works fine, press then Space if needed.
+ *  ⚠  < and > require ISO NUBS key, not present on the Adv360.
+ *     Workaround: add "ABC" as a second macOS input source for coding.
  */
 
 #include <dt-bindings/zmk/stp.h>
@@ -260,13 +265,15 @@
 /* ── Row 1: § and ° on outer edges, numbers pass through ── */
 /*[1]=§    [2]=1     [3]=2     [4]=3     [5]=4     [6]=5     [7]=trans        [8]=trans  [9]=6     [10]=7    [11]=8    [12]=9    [13]=0    [14]=°    */
   &kp GRAVE &kp N1    &kp N2    &kp N3    &kp N4    &kp N5    &trans                     &trans     &kp N6    &kp N7    &kp N8    &kp N9    &kp N0    &kp LS(GRAVE)
-/* ── Row 2: ` ! @ # $ % on left │ ^ & * + = € on right ── */
-/*[15]=`   [16]=!    [17]=@    [18]=#    [19]=$    [20]=%    [21]=none        [22]=none  [23]=^    [24]=&    [25]=*    [26]=+    [27]==    [28]=€    */
-  &kp LS(EQUAL) &kp LS(N1) &kp LA(N2) &kp LS(N3) &kp LA(N4) &kp LS(N5) &none           &none      &kp LS(RBKT) &kp LS(N6) &kp LS(BSLH) &kp MINUS &kp LS(N0) &kp LA(LS(N2))
+/* ── Row 2: ` ! @ # € % on left │ ^ & * + = ™ on right ── */
+/*[15]=`   [16]=!    [17]=@    [18]=#    [19]=€    [20]=%    [21]=none        [22]=none  [23]=^    [24]=&    [25]=*    [26]=+    [27]==    [28]=™    */
+/* @ = BSLH: the dedicated @ key on Norwegian ISO — no modifier needed!     */
+/* € = LA(N4), ™ = LA(N2) — both confirmed on this layout                   */
+  &kp LS(EQUAL) &kp LS(N1) &kp BSLH   &kp LS(N3) &kp LA(N4) &kp LS(N5) &none           &none      &kp LS(RBKT) &kp LS(N6) &kp LS(BSLH) &kp MINUS &kp LS(N0) &kp LA(N2)
 /* ── Row 3: brackets on home row + thumbs transparent ── */
-/*[29]=tr  [30]={    [31]=[    [32]=(    [33]=|    [34]=\    [35]=none [36]=tr   [37]=tr   [38]=tr   [39]=tr   [40]=none [41]=/    [42]=)    [43]=]    [44]=}    [45]=~⚠   [46]=tr  */
-/*         LA(LS8)   LA(N8)    LS(N8)    LA(N6)    EQUAL                                                                          LS(N7)    LS(N9)    LA(N9)    LA(LS9)   LA(RBKT)        */
-  &trans    &kp LA(LS(N8)) &kp LA(N8) &kp LS(N8) &kp LA(N6) &kp EQUAL &none    &trans    &trans    &trans    &trans    &none     &kp LS(N7) &kp LS(N9) &kp LA(N9) &kp LA(LS(N9)) &kp LA(RBKT) &trans
+/*[29]=tr  [30]={    [31]=[    [32]=(    [33]=|    [34]=\    [35]=none [36]=tr   [37]=tr   [38]=tr   [39]=tr   [40]=none [41]=/    [42]=)    [43]=]    [44]=}    [45]=~    [46]=tr  */
+/* | = LA(N7) = Option+7 confirmed    \ = LA(LS(N7)) = Option+Shift+7 confirmed */
+  &trans    &kp LA(LS(N8)) &kp LA(N8) &kp LS(N8) &kp LA(N7) &kp LA(LS(N7)) &none  &trans    &trans    &trans    &trans    &none     &kp LS(N7) &kp LS(N9) &kp LA(N9) &kp LA(LS(N9)) &kp LA(RBKT) &trans
 /* ── Row 4: punctuation ── */
 /*[47]=tr  [48]=;    [49]=:    [50]=,    [51]=.    [52]=?    [53]=tr   [54]=tr   [55]="    [56]=-    [57]=_    [58]=tr   [59]=tr   [60]=tr   */
   &trans    &kp LS(COMMA) &kp LS(DOT) &kp COMMA &kp DOT &kp LS(MINUS)  &trans    &trans              &kp LS(N2) &kp FSLH  &kp LS(FSLH) &trans  &trans    &trans
