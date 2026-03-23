@@ -150,8 +150,8 @@
 /*[47]=LS  [48]=Z    [49]=X    [50]=C    [51]=V    [52]=B    [53]=Home [54]=PgUp [55]=N    [56]=M    [57]=,    [58]=.    [59]=-    [60]=RS   */
   &kp LSHFT &kp Z     &kp X     &kp C     &kp V     &kp B               &kp HOME  &kp PG_UP           &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
 /* ── Row 5 + thumbs ── */
-/*[61]=m2  [62]=Aero [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=Sym  [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
-  &mo 2     &mo 6     &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &mo 5     &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
+/*[61]=m2  [62]=Aero [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=SymW [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
+  &mo 2     &mo 6     &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &mo 7     &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
             >;
         };
 
@@ -335,10 +335,37 @@
             >;
         };
 
-        /* Layer 7 — Reserved (Purple in ZMK Studio) */
-        extra2 {
-            display-name = "Purple";
-            status = "reserved";
+        /* ╔══════════════════════════════════════════════════════════════════╗
+           ║  LAYER 7 — SYM WINDOWS                                           ║
+           ║                                                                  ║
+           ║  Identical layout to Layer 5 (Mac Sym) but uses RA() (AltGr)    ║
+           ║  instead of LA() (Left Alt / Option).                            ║
+           ║                                                                  ║
+           ║  Windows Norwegian: AltGr = RA() in ZMK                         ║
+           ║  macOS Norwegian:   Option = LA() in ZMK                        ║
+           ║  Same characters, different modifier key.                        ║
+           ╚══════════════════════════════════════════════════════════════════╝ */
+        sym_win {
+            display-name = "SymWin";
+            bindings = <
+
+/* ── Row 1: § on far left, numbers pass through, ° on far right ── */
+  &kp GRAVE &kp N1    &kp N2    &kp N3    &kp N4    &kp N5    &trans                     &trans     &kp N6    &kp N7    &kp N8    &kp N9    &kp N0    &kp LS(GRAVE)
+
+/* ── Row 2: Q=^  W=@  E=#  R=!  T=~  │  Y=|  U=*  I==  O=+  P=%  \=€ ── */
+/* RA() = AltGr on Windows Norwegian, replaces LA() from Mac sym layer       */
+  &kp LS(EQUAL) &kp LS(RBKT) &kp BSLH &kp LS(N3) &kp LS(N1) &kp RA(RBKT) &none        &none      &kp RA(N7) &kp LS(BSLH) &kp LS(N0) &kp MINUS &kp LS(N5) &kp RA(LS(N2))
+
+/* ── Row 3: HOME ROW — A=-  S=[  D={  F=(  G='  │  H="  J=)  K=}  L=]  ø=_ ── */
+  &trans    &kp FSLH  &kp RA(N8) &kp RA(LS(N8)) &kp LS(N8) &kp RA(BSLH) &none  &trans  &trans  &trans  &trans  &none  &kp LS(N2) &kp LS(N9) &kp RA(LS(N9)) &kp RA(N9) &kp LS(FSLH) &trans
+
+/* ── Row 4: Z=&  X=$  C=\  V=/  B=?  │  N=<  M=>  ,=:  .=;  ── */
+  &trans    &kp LS(N6) &kp RA(N4) &kp RA(LS(N7)) &kp LS(N7) &kp LS(MINUS)  &trans  &trans  &kp NON_US_BSLH &kp LS(NON_US_BSLH) &kp LS(DOT) &kp LS(COMMA) &trans &trans
+
+/* ── Row 5: BSPC on T1, DEL on T2, rest transparent ── */
+  &trans    &trans    &trans    &trans    &trans              &kp BSPC  &kp DEL   &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &trans
+
+            >;
         };
 
         /* Layer 8 — Reserved (Cyan in ZMK Studio) */
