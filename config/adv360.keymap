@@ -338,31 +338,45 @@
         /* ╔══════════════════════════════════════════════════════════════════╗
            ║  LAYER 7 — SYM WINDOWS                                           ║
            ║                                                                  ║
-           ║  Identical layout to Layer 5 (Mac Sym) but uses RA() (AltGr)    ║
-           ║  instead of LA() (Left Alt / Option).                            ║
+           ║  Same layout as Layer 5 (Mac Sym) — all confirmed keycodes       ║
+           ║  for Windows Norwegian ISO keyboard.                              ║
            ║                                                                  ║
-           ║  Windows Norwegian: AltGr = RA() in ZMK                         ║
-           ║  macOS Norwegian:   Option = LA() in ZMK                        ║
-           ║  Same characters, different modifier key.                        ║
+           ║  Key differences from macOS Norwegian:                           ║
+           ║    @  = RA(N2)   not BSLH                                        ║
+           ║    '  = BSLH     not RA(BSLH)                                    ║
+           ║    |  = GRAVE    (bare key left of 1)                             ║
+           ║    \  = EQUAL    (bare key next to backspace)                     ║
+           ║    {  = RA(N7)   not RA(LS(N8))                                  ║
+           ║    }  = RA(N0)   not RA(LS(N9))                                  ║
+           ║    [  = RA(N8)   same as macOS                                    ║
+           ║    ]  = RA(N9)   same as macOS                                    ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         sym_win {
             display-name = "SymWin";
             bindings = <
 
 /* ── Row 1: § on far left, numbers pass through, ° on far right ── */
+/*[1]=§    [2]=1     [3]=2     [4]=3     [5]=4     [6]=5     [7]=trans        [8]=trans  [9]=6     [10]=7    [11]=8    [12]=9    [13]=0    [14]=°    */
   &kp GRAVE &kp N1    &kp N2    &kp N3    &kp N4    &kp N5    &trans                     &trans     &kp N6    &kp N7    &kp N8    &kp N9    &kp N0    &kp LS(GRAVE)
 
 /* ── Row 2: Q=^  W=@  E=#  R=!  T=~  │  Y=|  U=*  I==  O=+  P=%  \=€ ── */
-/* RA() = AltGr on Windows Norwegian, replaces LA() from Mac sym layer       */
-  &kp LS(EQUAL) &kp LS(RBKT) &kp BSLH &kp LS(N3) &kp LS(N1) &kp RA(RBKT) &none        &none      &kp RA(N7) &kp LS(BSLH) &kp LS(N0) &kp MINUS &kp LS(N5) &kp RA(LS(N2))
+/*[15]=`   [16]=^    [17]=@    [18]=#    [19]=!    [20]=~    [21]=none        [22]=none  [23]=|    [24]=*    [25]==    [26]=+    [27]=%    [28]=€    */
+/* Tab=` via LS(EQUAL)   W=@ via RA(N2)   Y=| via GRAVE(bare, left of 1)     */
+/* T=~ via RA(RBKT)      €  via RA(LS(N2))                                   */
+  &kp LS(EQUAL) &kp LS(RBKT) &kp RA(N2) &kp LS(N3) &kp LS(N1) &kp RA(RBKT) &none       &none      &kp GRAVE &kp LS(BSLH) &kp LS(N0) &kp MINUS &kp LS(N5) &kp RA(LS(N2))
 
 /* ── Row 3: HOME ROW — A=-  S=[  D={  F=(  G='  │  H="  J=)  K=}  L=]  ø=_ ── */
-  &trans    &kp FSLH  &kp RA(N8) &kp RA(LS(N8)) &kp LS(N8) &kp RA(BSLH) &none  &trans  &trans  &trans  &trans  &none  &kp LS(N2) &kp LS(N9) &kp RA(LS(N9)) &kp RA(N9) &kp LS(FSLH) &trans
+/*[29]=tr  [30]=-    [31]=[    [32]={    [33]=(    [34]='    [35]=none [36]=tr [37]=tr [38]=tr [39]=tr [40]=none [41]="    [42]=)    [43]=}    [44]=]    [45]=_    [46]=tr  */
+/* G=' via BSLH(bare)   D={ via RA(N7)   K=} via RA(N0)                      */
+  &trans    &kp FSLH  &kp RA(N8) &kp RA(N7) &kp LS(N8) &kp BSLH  &none  &trans  &trans  &trans  &trans  &none  &kp LS(N2) &kp LS(N9) &kp RA(N0) &kp RA(N9) &kp LS(FSLH) &trans
 
 /* ── Row 4: Z=&  X=$  C=\  V=/  B=?  │  N=<  M=>  ,=:  .=;  ── */
-  &trans    &kp LS(N6) &kp RA(N4) &kp RA(LS(N7)) &kp LS(N7) &kp LS(MINUS)  &trans  &trans  &kp NON_US_BSLH &kp LS(NON_US_BSLH) &kp LS(DOT) &kp LS(COMMA) &trans &trans
+/*[47]=tr  [48]=&    [49]=$    [50]=\    [51]=/    [52]=?    [53]=tr   [54]=tr   [55]=<    [56]=>    [57]=:    [58]=;    [59]=tr   [60]=tr   */
+/* C=\ via EQUAL(bare, the key next to backspace)                             */
+  &trans    &kp LS(N6) &kp RA(N4) &kp EQUAL  &kp LS(N7) &kp LS(MINUS)  &trans  &trans  &kp NON_US_BSLH &kp LS(NON_US_BSLH) &kp LS(DOT) &kp LS(COMMA) &trans &trans
 
 /* ── Row 5: BSPC on T1, DEL on T2, rest transparent ── */
+/*[61]=tr  [62]=tr   [63]=tr   [64]=tr   [65]=tr   [66]=BSPC [67]=DEL  [68]=tr   [69]=tr   [70]=tr   [71]=tr   [72]=tr   [73]=tr   [74]=tr   [75]=tr   [76]=tr   */
   &trans    &trans    &trans    &trans    &trans              &kp BSPC  &kp DEL   &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &trans
 
             >;
