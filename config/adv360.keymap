@@ -122,8 +122,8 @@
 /*[47]=LS  [48]=Z    [49]=X    [50]=C    [51]=V    [52]=B    [53]=Home [54]=PgUp [55]=N    [56]=M    [57]=,    [58]=.    [59]=-    [60]=RS   */
   &kp LSHFT &kp Z     &kp X     &kp C     &kp V     &kp B               &kp HOME  &kp PG_UP           &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
 /* ── Row 5: nav row + 6 thumb keys (pos 66–71) ── pos 61–65 left │ 66–71 thumbs │ 72–76 right ── */
-/*[61]=m2  [62]=§    [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=Sym  [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
-  &mo 2     &kp GRAVE &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &mo 5     &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
+/*[61]=m2  [62]=Aero [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=Sym  [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
+  &mo 2     &mo 6     &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &mo 5     &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
             >;
         };
 
@@ -132,7 +132,7 @@
            ║                                                                  ║
            ║  Same layout as Mac but homerow mods adjusted for Windows:      ║
            ║  Hold: A=Ctrl  S=Alt  D=Ctrl  F=Shift                          ║
-           ║  [T2] = DEL (Windows uses DEL more than Mac)                    ║
+           ║  T2 = Sym layer (same as Mac)                                   ║
            ╚══════════════════════════════════════════════════════════════════╝ */
         win_layer {
             display-name = "Win";
@@ -150,8 +150,8 @@
 /*[47]=LS  [48]=Z    [49]=X    [50]=C    [51]=V    [52]=B    [53]=Home [54]=PgUp [55]=N    [56]=M    [57]=,    [58]=.    [59]=-    [60]=RS   */
   &kp LSHFT &kp Z     &kp X     &kp C     &kp V     &kp B               &kp HOME  &kp PG_UP           &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
 /* ── Row 5 + thumbs ── */
-/*[61]=m2  [62]=§    [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=DEL  [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
-  &mo 2     &kp GRAVE &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &kp DEL   &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
+/*[61]=m2  [62]=Aero [63]=Caps [64]=←    [65]=→    [66]=BSPC [67]=Sym  [68]=End  [69]=PgDn [70]=Ent  [71]=Spc  [72]=↑    [73]=↓    [74]=å    [75]=¨    [76]=m2   */
+  &mo 2     &mo 6     &kp CAPS  &kp LEFT  &kp RIGHT           &kp BSPC  &mo 5     &kp END   &kp PG_DN &kp ENTER &kp SPACE           &kp UP    &kp DOWN  &kp LBKT  &kp RBKT  &mo 2
             >;
         };
 
@@ -293,10 +293,46 @@
 
         /* ── Reserved layers ─────────────────────────────────────────────── */
 
-        /* Layer 6 — Reserved (Red in ZMK Studio) */
-        extra1 {
-            display-name = "Red";
-            status = "reserved";
+        /* ╔══════════════════════════════════════════════════════════════════╗
+           ║  LAYER 6 — AEROSPACE (window manager)                            ║
+           ║                                                                  ║
+           ║  Activated by holding the § key (pos 62, bottom-left area).      ║
+           ║                                                                  ║
+           ║  Focus windows  : H J K L  (shift-alt-h/j/k/l)                  ║
+           ║  Move window    : A S D F  (ctrl-alt-h/j/k/l)                   ║
+           ║  Move to monitor: W E      (shift-alt-s / shift-alt-g)           ║
+           ║  Move to ws     : I O      (shift-alt-p / shift-alt-n)           ║
+           ║  Workspace prev : P        (cmd-h)                               ║
+           ║  Workspace next : N        (cmd-l)                               ║
+           ║  Resize mode    : X        (alt-r, then hjkl, ESC to exit)       ║
+           ║  Fullscreen     : \        (shift-alt-m)                         ║
+           ║  Rotate layout  : R        (shift-alt-r)                         ║
+           ║  Float/tile     : T        (shift-alt-t)                         ║
+           ╚══════════════════════════════════════════════════════════════════╝ */
+        aerospace {
+            display-name = "Aero";
+            bindings = <
+
+/* ── Row 1: all transparent ── */
+  &trans    &trans    &trans    &trans    &trans    &trans    &trans                     &trans     &trans    &trans    &trans    &trans    &trans    &trans
+
+/* ── Row 2: W=mon←  E=mon→  R=rotate  T=float/tile  │  I=ws-prev  O=ws-next  P=ws-prev  \=fullscr ── */
+/*[15]=tr  [16]=tr   [17]=mon← [18]=mon→ [19]=rot  [20]=flt  [21]=none        [22]=none  [23]=tr   [24]=tr   [25]=ws←  [26]=ws→  [27]=ws-p [28]=full */
+  &trans    &trans    &kp LS(LA(S)) &kp LS(LA(G)) &kp LS(LA(R)) &kp LS(LA(T)) &none    &none      &trans    &trans    &kp LS(LA(P)) &kp LS(LA(N)) &kp LG(H) &kp LS(LA(M))
+
+/* ── Row 3: A=move←  S=move↓  D=move↑  F=move→  │  H=focus←  J=focus↓  K=focus↑  L=focus→ ── */
+/*[29]=tr  [30]=mv←  [31]=mv↓  [32]=mv↑  [33]=mv→  [34]=tr   [35]=none [36]=tr [37]=tr [38]=tr [39]=tr [40]=none [41]=fc←  [42]=fc↓  [43]=fc↑  [44]=fc→  [45]=tr   [46]=tr  */
+  &trans    &kp LC(LA(H)) &kp LC(LA(J)) &kp LC(LA(K)) &kp LC(LA(L)) &trans &none  &trans  &trans  &trans  &trans  &none  &kp LS(LA(H)) &kp LS(LA(J)) &kp LS(LA(K)) &kp LS(LA(L)) &trans &trans
+
+/* ── Row 4: X=resize mode  │  N=ws-next ── */
+/*[47]=tr  [48]=tr   [49]=rsz  [50]=tr   [51]=tr   [52]=tr   [53]=tr   [54]=tr   [55]=ws+  [56]=tr   [57]=tr   [58]=tr   [59]=tr   [60]=tr   */
+  &trans    &trans    &kp LA(R) &trans    &trans    &trans              &trans    &trans              &kp LG(L) &trans    &trans    &trans    &trans    &trans
+
+/* ── Row 5: layer key itself is here (trans when held), keep media and thumbs ── */
+/*[61]=m2  [62]=self [63]=tr   [64]=tr   [65]=tr   [66]=tr   [67]=tr   [68]=tr   [69]=tr   [70]=tr   [71]=tr   [72]=tr   [73]=tr   [74]=tr   [75]=tr   [76]=m2   */
+  &mo 2     &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &trans    &trans              &trans    &trans    &trans    &trans    &mo 2
+
+            >;
         };
 
         /* Layer 7 — Reserved (Purple in ZMK Studio) */
